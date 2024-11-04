@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Menu, Booking
-from .serialisers import MenuSerializers, BookingSerializer
+from django.contrib.auth.models import User
+from .serialisers import MenuSerializers, BookingSerializer, UserSerializer, UserRegistrationSerializer
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -20,3 +23,16 @@ class BookingViewSet(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     permission_classes = [IsAuthenticated]
+
+class UsersListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserRegistrationView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
