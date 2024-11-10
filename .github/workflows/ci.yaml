@@ -12,7 +12,7 @@ jobs:
         container: python:3.13.0-alpine
 
         services:
-            db:
+            mysql:
               image: mysql:latest
               env:
                 MYSQL_ROOT_PASSWORD: password
