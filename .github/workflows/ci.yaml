@@ -47,6 +47,6 @@ jobs:
                 DB_NAME: test_db
                 DB_USER: user
                 DB_PASSWORD: password
-                DB_HOST: mysql
-                DATABASE_URL: mysql://user:password@mysql:3306/test_db
+                DB_HOST: 127.0.0.1
+                DATABASE_URL: mysql://user:password@127.0.0.1:3306/test_db
             
