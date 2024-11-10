@@ -15,10 +15,9 @@ jobs:
             db:
               image: mysql:latest
               env:
-                MYSQL_ROOT_PASSWORD: password
-                MYSQL_DATABASE: test_db
-                MYSQL_USER: user
-                MYSQL_PASSWORD: password
+                DB_PASSWORD: password
+                DB_NAME: test_db
+                DB_USER: user
               options: --health-cmd "mysqladmin ping --silent" --health-interval 10s --health-timeout 5s --health-retries 3
               ports:
                 - 3306:3306
@@ -44,9 +43,9 @@ jobs:
                 python manage.py migrate
                 python manage.py test
               env:
-                MYSQL_DATABASE: test_db
-                MSQL_USER: user
-                MYSQL_PASSWORD: password
-                MYSQL_HOST: mysql
+                DB_NAME: test_db
+                DB_USER: user
+                DB_PASSWORD: password
+                DB_HOST: mysql
                 DATABASE_URL: mysql://user:password@mysql:3306/test_db
             
