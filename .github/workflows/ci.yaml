@@ -38,7 +38,7 @@ jobs:
                   pip install -r requirements.txt
 
             - name: Run Migration and Tests
-              working-directory: ./django-littlelemon/littlelemon
+              working-directory: ./littlelemon
               run: |
                 python manage.py migrate
                 python manage.py test
