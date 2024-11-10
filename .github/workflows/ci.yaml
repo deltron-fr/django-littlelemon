@@ -1,0 +1,50 @@
+name: CI-pipeline
+
+on:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        container: python:3.13.0-alpine
+
+        services:
+            db:
+              image: mysql:latest
+              env:
+                MYSQL_ROOT_PASSWORD: password
+                MYSQL_DATABASE: test_db
+                MYSQL_USER: user
+                MYSQL_PASSWORD: password
+              options: --health-cmd "mysqladmin ping --silent" --health-interval 10s --health-timeout 5s --health-retries 3
+              ports:
+                - 3306:3306
+                
+            
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install Dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+
+            - name: Lint code with flake8
+              run: |
+               pip install flake8
+               flake8 .
+            - name: Run Tests
+              run: |
+                python manage.py migrate
+                python manage.py test
+              env:
+                MYSQL_DATABASE: test_db
+                MSQL_USER: user
+                MYSQL_PASSWORD: password
+                MYSQL_HOST: mysql
+                DATABASE_URL: mysql://user:password@mysql:3306/test_db
+            
