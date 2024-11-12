@@ -14,10 +14,10 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test_db
           MYSQL_USER: user
-          MYSQL_PASSWORD: password
+          MYSQL_PASSWORD: test_password
         options: --health-cmd "mysqladmin ping --silent" --health-interval 10s --health-timeout 5s --health-retries 3
         ports:
           - 3306:3306
@@ -34,7 +34,7 @@ jobs:
     env:
       DB_NAME: test_db
       DB_USER: user
-      DB_PASSWORD: password
+      DB_PASSWORD: root
       DB_HOST: 127.0.0.1
 
     steps:
@@ -57,7 +57,7 @@ jobs:
             echo 'Waiting for MySQL...'
             sleep 2
           done
-          
+
       - name: Run Migrations and Tests
         working-directory: ./littlelemon
         run: |
