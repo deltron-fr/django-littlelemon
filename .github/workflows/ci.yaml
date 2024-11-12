@@ -24,6 +24,7 @@ jobs:
     env:
       DJANGO_SETTINGS_MODULE: littlelemon.settings
       DATABASE_URL: mysql://user:test_password@127.0.0.1:3306/test_db
+      DB_HOST: 127.0.0.1
 
     steps:
       - name: Checkout
