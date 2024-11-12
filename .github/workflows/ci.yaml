@@ -7,39 +7,32 @@ on:
     branches: [ "main" ]
 
 jobs:
-  mysql-setup:
+  test:
     runs-on: ubuntu-latest
-    container: python:3.13.0-alpine
     services:
       mysql:
-        image: mysql:latest
+        image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: root_password
           MYSQL_DATABASE: test_db
           MYSQL_USER: user
           MYSQL_PASSWORD: test_password
         options: --health-cmd "mysqladmin ping --silent" --health-interval 10s --health-timeout 5s --health-retries 3
         ports:
           - 3306:3306
-          
-    steps:
-      - name: MySQL Setup Complete
-        run: echo "MySQL setup job complete."
-
-  migrate-and-test:
-    runs-on: ubuntu-latest
-    container: python:3.13.0-alpine
-    needs: mysql-setup   
 
     env:
-      DB_NAME: test_db
-      DB_USER: user
-      DB_PASSWORD: root
-      DB_HOST: 127.0.0.1
+      DJANGO_SETTINGS_MODULE: littlelemon.settings
+      DATABASE_URL: mysql://user:test_password@127.0.0.1:3306/test_db
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.13.0'
 
       - name: Install MySQL dependencies
         run: |
@@ -50,13 +43,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Wait for MySQL to Be Ready
-        run: |
-          until mysqladmin ping -h "$DB_HOST" --silent; do
-            echo 'Waiting for MySQL...'
-            sleep 2
-          done
 
       - name: Run Migrations and Tests
         working-directory: ./littlelemon
