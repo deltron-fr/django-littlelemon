@@ -87,8 +87,8 @@ If you encounter any compile issues with mysqlclient during installation, you ca
 
 1. **Clone the repository:**
    ```sh
-   git clone <repo-url>
-   cd django_littlelemon
+   mkdir django_littlelemon && cd django_littlelemon
+   git clone <repo-url> .
    ```
 
 2. **Create and configure your `.env` file in the project root, an example file is in the repo**
